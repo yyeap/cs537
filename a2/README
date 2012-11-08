@@ -1,0 +1,19 @@
+CS 537 - Assignment 2 - Oct 24 2012
+Yuen Lye Yeap
+Lee Yerkes
+
+Files:
+
+537threads.c
+reader.c
+reader.h
+munch1.c
+munch1.h
+munch2.c
+munch2.h
+writer.c
+writer.h
+synchq.h
+synchq.c
+
+Compiled and ran on mumble-14.
