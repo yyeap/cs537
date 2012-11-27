@@ -73,6 +73,5 @@ extern int isEmpty(q* q)
 
 extern void q_destroy(q* q)
 {
-    free(q->head);
-    free(q->tail);
+    free(q);
 }
