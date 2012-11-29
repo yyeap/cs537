@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include "queue.h"
 
-extern void q_init(q* q)
+extern void q_init(queue* q)
 {
     q->head = NULL;
     q->tail = NULL;
     q->size = 0;
 }
 
-extern int enqueue(q* q, Process* p)
+extern int enqueue(queue* q, Process* p)
 {
     if(NULL == p)
     {
@@ -40,7 +40,7 @@ extern int enqueue(q* q, Process* p)
     return 0;
 }
 
-extern Process* dequeue(q* q)
+extern Process* dequeue(queue* q)
 {
     Process* temp = NULL;
 
@@ -66,12 +66,12 @@ extern Process* dequeue(q* q)
     return temp;
 }
 
-extern int isEmpty(q* q)
+extern int isEmpty(queue *q)
 {
     return 0 == q->size;
 }
 
-extern void q_destroy(q* q)
+extern void q_destroy(queue *q)
 {
     free(q);
 }

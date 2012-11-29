@@ -6,14 +6,14 @@ typedef struct queue {
     Process* head;
     Process* tail;
     int size;
-}q;
+}queue;
 
-extern void q_init(q* q);
+extern void q_init(queue* q);
 
-extern int enqueue(q* q, Process* p);
+extern int enqueue(queue* q, Process* p);
 
-extern Process* dequeue(q* q);
+extern Process* dequeue(queue* q);
 
-extern int isEmpty(q* q);
+extern int isEmpty(queue* q);
 
-extern void q_destroy(q* q);
+extern void q_destroy(queue* q);
