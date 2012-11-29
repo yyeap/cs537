@@ -1,3 +1,4 @@
+
 /*
 Yuen Lye Yeap
 Lee Yerkes
@@ -7,31 +8,47 @@ Lee Yerkes
 Contains implementation of simulator main loop and stuff.
 */
 
-/*INITIALIZATION
+#include <stdio>
+#include <stdlib>
+#include "process.h"
+#include "stats.h"
+#include "scheduler.h"
+#include "disk.h"
 
-Process* current_process = NULL;
-stats* stats;
-init_stats(stats);
-queue* q;
-init_queue(q);
-int clock = 0;
-int io;
-int ts; 
-int ar;
-*/
+
 int main (int argc, char* argv[]){
+  Process* current_process = NULL;
+  Process* next_process = NULL;
+  
+  disk* disk;
+  init_disk(disk);
+  
+  stats* stats;
+  init_stats(stats);
+  
+  queue* q;
+  init_queue(q);
+  
+  int clock = 0;
+  int io;
+  int ts; 
+  int ar;
+
+  FILE* tracefile;
+ 
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
   }
+ 
   while(!done) {
     if (NULL != current_process) {
       clock++;
     }
     
-    io = get_IO_Complete();
+    io = get_IO_Complete(disk, clock);
     ts = get_timeslice(q);
-    ar = get_arrival();
+    ar = get_arrival(FILE, process_buffer);
     
     clock += min(io, ts, ar);
     

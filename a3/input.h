@@ -7,6 +7,7 @@ input.h
 
 */
 #include <string.h>
+#include "process.h"
 
 /*
 parseTrace
@@ -26,3 +27,5 @@ return:
 none
  */
 void parseTrace(char* line, char* name, int* start_time, int* cpu_time, int* io_count);
+
+process* get_arrival(FILE* f, Process* buffer);
