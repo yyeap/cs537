@@ -6,43 +6,41 @@ extern void q_init(queue* q)
 {
     q->head = NULL;
     q->tail = NULL;
-    q->size = 0;
 }
 
 extern int enqueue(queue* q, Process* p)
 {
+    node *newNode =(node*) malloc(sizeof(node));
     if(NULL == p)
     {
         printf("ERROR: Cannot add null process to queue.");
         return -1;
+    } else if (NULL == newNode)
+    {
+        printf("ERROR: Cannot allocate memory.");
+        return -1;
     }
+
+    newNode->data = p;
 
     if (NULL == q->head) /* if queue is empty */
     {
-        q->head = p;
-        q->head->next = NULL;
-        q->head->prev = NULL;
-        q->tail->prev = NULL;
-    }
-    else if (1 == q->size)
-    {
-        q->head->next = p;
-        q->tail->prev = q->head;
+        q->head = newNode;
+        q->tail = newNode;
     }
     else
     {
-        q->tail->next = p;
-        q->tail->next->prev = p;
+        q->tail->next = newNode;
     }
-    q->tail = p;
+    q->tail = newNode;
     q->tail->next = NULL;
-    q->size++;
     return 0;
 }
 
 extern Process* dequeue(queue* q)
 {
-    Process* temp = NULL;
+    Process* data;
+    node *temp;
 
     if (NULL == q->head)
     {
@@ -50,28 +48,29 @@ extern Process* dequeue(queue* q)
         return NULL;
     }
 
-    if (1 == q->size)
+    data = q->head->data;
+    temp = q->head;
+
+    if (NULL == q->head->next)
     {
-        temp = q->head;
         q->head = NULL;
         q->tail = NULL;
     }
     else
     {
-        temp = q->tail;
-        q->tail = q->tail->prev;
-        q->tail->next = NULL;
+        q->head = q->head->next;
     }
-    q->size--;
-    return temp;
+
+    free(temp);
+    return data;
 }
 
 extern int isEmpty(queue *q)
 {
-    return 0 == q->size;
+    return NULL == q->head;
 }
 
-extern void q_destroy(queue *q)
+extern Process* peek (queue* q)
 {
-    free(q);
+    return q->head->data;
 }

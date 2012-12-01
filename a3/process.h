@@ -9,6 +9,7 @@ typedef struct process {
     int IO_remaining;
     int IO_interval;
     int IO_operations;
+    int IO_complete;
     struct process *next;
     struct process *prev;
 } Process;
@@ -48,6 +49,10 @@ extern int getIO_interval (Process* p);
 extern void setIO_operations (Process* p, int op);
 
 extern int getIO_operations (Process* p);
+
+extern void setIO_complete (Process* p, int clock);
+
+extern int getIO_complete (Process* p);
 
 extern void setNext (Process*p, Process* next);
 

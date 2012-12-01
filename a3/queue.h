@@ -2,10 +2,14 @@
 #include <stdlib.h>
 #include "process.h"
 
+typedef struct node {
+    struct node *next;
+    Process* data;
+}node;
+
 typedef struct queue {
-    Process* head;
-    Process* tail;
-    int size;
+    struct node *head;
+    struct node *tail;
 }queue;
 
 extern void q_init(queue* q);
@@ -16,4 +20,4 @@ extern Process* dequeue(queue* q);
 
 extern int isEmpty(queue* q);
 
-extern void q_destroy(queue* q);
+extern Process* peek (queue* q);

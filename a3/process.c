@@ -103,6 +103,16 @@ extern int getIO_operations (Process* p)
     return p->IO_operations;
 }
 
+extern void setIO_complete (Process* p, int clock)
+{
+    p->IO_complete = clock + 10;
+}
+
+extern int getIO_complete (Process* p)
+{
+    return p->IO_complete;
+}
+
 extern void setNext(Process* p, Process* next)
 {
     p->next = next;
