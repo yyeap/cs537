@@ -1,3 +1,6 @@
+/*
+This is Emin Martinian's red black tree implememntation from mit.edu
+ */
 #ifdef DMALLOC
 #include <dmalloc.h>
 #endif

@@ -1,3 +1,6 @@
+/*
+stack.h and stack.c from Emin Martinian's red black tree implementation
+ */
 #include "misc.h"
 
 /*  CONVENTIONS:  All data structures for stacks have the prefix */

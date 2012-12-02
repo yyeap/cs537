@@ -1,3 +1,7 @@
+/*
+misc.h and misc.c from Emin Martinian's red black tree implementation
+ */
+
 #include<stdio.h>
 #include<stdlib.h>
 
