@@ -5,25 +5,13 @@ stcp.c
 
 //Process cpu time comparison for rb tree
 int pCompare(const void* a, const void* b){
-  if(a->CPU_time > b->CPU_time) return 1;
-  if(a->CPU_time < b->CPU_time) return -1;
+  if(a->cpu > b->cpu) return 1;
+  if(a->cpu < b->cpu) return -1;
   return 0;
 } 
-// empty function for rb tree
-void infoprint(void* a) {
-  ;
-}
-// empty function for rb tree
-void keyprint(void* a) {
-  ;
-}
-// emtpy function for rb tree
-void infodest(void* a) {
-  ;
-}
 
+//insert into rb tree with priority CPU time
 void add_process(process* new_p, void* q) {
-  // insert with priority being smallest CPU
   RBTreeInsert((rb_red_blk_tree*)q, new_p, 0);
 }
 
@@ -39,5 +27,5 @@ int get_timeslice(int time, void* q) {
 
 void init_q(void* q) {
   // initialize rb tree and assign to pointer 
-  q = (void*)RBTreeCreate(pCompare, DestroyProcess, infodest, keyprint, infoprint);
+  q = (void*)RBTreeCreate(pCompare, NullFunction, NullFunction, NullFunction, NullFunction);
 }
