@@ -10,6 +10,6 @@ typedef struct disk {
     int size;
 } disk;
 
-extern void disk_init (disk* d);
+extern void disk_init(disk* d);
 
 extern int get_IO_complete(disk* d, int clock);

@@ -11,7 +11,7 @@ extern void disk_init (disk* d)
     d->size = 0;
 }
 
-extern int get_IO_complete (disk* d)
+extern int get_IO_complete (disk* d, int clock)
 {
-
+  //return 1 if IO complete, else 0
 }

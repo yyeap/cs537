@@ -48,12 +48,3 @@ extern void displayStats (stats* data, int clock)
     printf("Throughput: %.2f\n", (float)(data->jobs / clock) / 1000);
     printf("Utilization: %d\tPercent utilization: %.2f\n", data->total_time, (float)data->total_time / clock);
 }
-/*Average Completion Time*/
-
-/*Minimum Completion Time*/
-
-/*Maximum Completion Time*/
-
-/*Throughput (jobs per second)*/
-
-/*Utilization*/
