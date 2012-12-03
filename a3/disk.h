@@ -2,11 +2,6 @@
 disk.h
 */
 
-typedef struct disk {
-    struct queue* q;
-    int IO_remain;
-} disk;
-
 void init_disk();
 
 void io_add_process(struct Process *p);
