@@ -16,6 +16,6 @@ typedef struct process {
     long completion_time;
 } Process;
 
-extern Process* CreateProcess(char* name, long arrival, long cpu, lomg IO_count);
+extern Process* CreateProcess(char* name, long arrival, long cpu, long IO_count);
 
-extern void DestroyProcess (Process *p);
+extern void DestroyProcess(Process *p);
