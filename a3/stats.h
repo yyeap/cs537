@@ -14,7 +14,7 @@ typedef struct stats{
 	long total_time;
 }stats;
 
-void stats_init (stats* data);
+void init_stats (stats* data);
 
 void updateStats (stats* data, struct Process *p, long clock);
 

@@ -13,56 +13,46 @@ Contains implementation of simulator main loop and stuff.
 #include "stats.h"
 #include "scheduler.h"
 #include "disk.h"
-#include "queue.h"
+#include "input.h"
 
 int main (int argc, char* argv[]){
   struct Process* current_process = NULL;
   struct Process* next_process = NULL;
   disk* disk;
-  queue* q;
+  void* q;
   stats* stats;
-  long clock;
+  long clock = 0;
   long io;
   long ts;
   long ar;
   FILE* tracefile;
-  int *reason;
+  int* reason;
 
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
   }
 
-  clock = 0;
-  *reason = -1;
-
   init_stats(stats);
   init_disk(disk);
-  init_queue(q);
-
+  init_q(q);
+  
   while(1) {
     if (NULL != current_process) {
       clock++;
-      update_io_remain(disk, 1);
+      update_io_remain(disk, 1); 
     }
 
-    io = get_IO_Complete(disk, clock);
-    ts = get_timeslice(q, reason);
+    io = get_IO_complete(disk, clock);
+    ts = get_timeslice(clock, q, reason);
     ar = get_arrival();
 
     /*EVENT simulation completed*/
-    if(ar == -1 && get_timeslice/*add get_timeslice empty case*/) {
-      /* display stats, destroy and exit */
-      displayStats(stats, clock);
-
-      /* free up resources before terminate simulator */
-      free(current_process);
-      free(next_process);
-      free(disk);
-      free(q);
+    if(ar == -1 && ts == -1) {
+      //display stats, destroy and exit
       exit(0);
     }
-
+    
     /*EVENT io has been completed*/
     if(io == 1) {
       clock += io;
@@ -79,13 +69,12 @@ int main (int argc, char* argv[]){
       }
       else if (*reason == 0) {
 	/*if done, collect statistics*/
-          updateStats(stats, current_process, clock);
       }
       else if(*reason == 1) {
 	/*if timeslice ended, return to queue*/
       }
       update_io_remain(disk, ts);
-    }
+    } 
     /*EVENT new process arrival*/
     else {
       clock += ar;

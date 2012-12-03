@@ -9,7 +9,7 @@ disk.c
 
 #define IOTIME 10
 
-void disk_init (disk* d)
+void init_disk (disk* d)
 {
     q_init(d->q);
 }

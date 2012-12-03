@@ -10,6 +10,6 @@ void add_process(struct Process*, void*);
 
 struct Process* get_process(void*);
 
-int get_timeslice(long, void*, int*);
+long get_timeslice(long, void*, int*);
 
 void init_q(void*);

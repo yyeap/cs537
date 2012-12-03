@@ -7,7 +7,7 @@ typedef struct disk {
     int IO_remain;
 } disk;
 
-void disk_init(disk* d);
+void init_disk(disk* d);
 
 void io_add_process(disk *d, struct Process *p);
 
