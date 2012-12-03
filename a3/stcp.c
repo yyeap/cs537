@@ -8,7 +8,7 @@ stcp.c
 int pCompare(const void* a, const void* b){
   const Process* x = a;
   const Process* y = b;
-  if(x->cpu < y->cpu) return 1;
+  if(x->cpu_remaining < y->cpu_remaining) return 1;
   return 0;
 } 
 
@@ -24,11 +24,21 @@ Process* get_process(void* q) {
   return p;
 }
 
-long get_timeslice(long time, void* q) {
-  /*return time + CPU time of shortest process*/
+long get_timeslice(long time, void* q, int* reason) {
+  /*return time + CPU time of shortest process or IO time if sooner*/
   Process* p;
+  long timeslice;
   p = (Process*)RBPeek((rb_red_blk_tree*)q);
-  return p->cpu_remaining + time;
+  
+  if(p->IO_remaining == 0 || p->cpu_remaining < p->time_until_io){
+    reason = 0;
+    timeslice = p->cpu_remaining + time;
+  } else {
+    reason = 2;
+    timeslice = p->time_until_io + time;
+    p->time_until_io = p->IO_interval;
+  }
+  return timeslice;
 }
 
 void init_q(void* q) {

@@ -1,4 +1,3 @@
-
 /*
 Yuen Lye Yeap
 Lee Yerkes
@@ -26,7 +25,9 @@ int main (int argc, char* argv[]){
   long ts; 
   long ar;
   FILE* tracefile;
-  
+  int reason;
+  int done = 0;
+
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
@@ -45,23 +46,38 @@ int main (int argc, char* argv[]){
   while(!done) {
     if (NULL != current_process) {
       clock++;
+      update_io_remain(disk, 1); 
     }
     
     io = get_IO_Complete(disk, clock);
-    ts = get_timeslice(q);
+    ts = get_timeslice(q, reason);
     ar = get_arrival(FILE, process_buffer);
-    
-    clock += min(io, ts, ar);
-    
-    if(io <= ts && io <= ar) {
+        
+    if(io == 1) {
       clock += io;
+      update_io_remain(disk, io);
+      add_process(q, get_next_io(disk));
     }
     else if (ts <= io && ts <= ar) {
       clock += ts;
+      /*determine reason for timeslice
+      if IO, add process to disk*/
+      if(reason == 2){
+	io_add_process(disk, get_process(q));
+      }
+      else if (reason == 0) {
+	/*if done, collect statistics*/
+      }
+      else if(reason == 1) {
+	/*if timeslice ended, return to queue*/
+      }
+      update_io_remain(disk, ts);
     } 
     else {
       clock += ar;
-      current_process;
+      update_io_remain(disk, ar);
+      add_process(q, get_next_process());
+      
     }
   }
   return 0;
