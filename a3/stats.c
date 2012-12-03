@@ -8,8 +8,8 @@ Header file for statistics functions
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h> /* for min and max int values */
-#include "stats.h"
 #include "process.h"
+#include "stats.h"
 
 void stats_init (stats* data)
 {
