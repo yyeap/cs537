@@ -1,4 +1,4 @@
-TARGET =
+TARGET = 537sim
 LIBS =
 CC = gcc
 CFLAGS = -g -Wall -pedantic
