@@ -27,11 +27,8 @@ int main (int argc, char* argv[]){
   long ts;
   long ar;
   FILE* tracefile;
-<<<<<<< HEAD
   int reason;
   int done = 0;
-=======
->>>>>>> 16c14c1d22a60bf1fd1e6af48019b7348d08887c
 
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
@@ -53,20 +50,16 @@ int main (int argc, char* argv[]){
     io = get_IO_Complete(disk, clock);
     ts = get_timeslice(q, reason);
     ar = get_arrival(FILE, process_buffer);
-<<<<<<< HEAD
         
     if(io == 1) {
-=======
 
     if(io <= ts && io <= ar) {
->>>>>>> 16c14c1d22a60bf1fd1e6af48019b7348d08887c
       clock += io;
       update_io_remain(disk, io);
       add_process(q, get_next_io(disk));
     }
     else if (ts <= io && ts <= ar) {
       clock += ts;
-<<<<<<< HEAD
       /*determine reason for timeslice
       if IO, add process to disk*/
       if(reason == 2){
@@ -85,11 +78,9 @@ int main (int argc, char* argv[]){
       update_io_remain(disk, ar);
       add_process(q, get_next_process());
       
-=======
     }
     else {
       clock += ar;
->>>>>>> 16c14c1d22a60bf1fd1e6af48019b7348d08887c
     }
   }
   return 0;
