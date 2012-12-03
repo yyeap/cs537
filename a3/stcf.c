@@ -9,15 +9,15 @@ rb_red_blk_tree* q;
 
 /*struct Process cpu time comparison for rb tree*/
 int pCompare(const void* a, const void* b){
-  const struct Process* x = a;
-  const struct Process* y = b;
-  if(x->cpu_remaining < y->cpu_remaining) return 1;
+  if(*(int*)a > *(int*)b) return 1;
+  if(*(int*)a < *(int*)b) return -1;
   return 0;
 } 
 
 /*insert into rb tree with priority CPU time*/
 void stcf_add_process(struct Process* new_p) {
-  RBTreeInsert(q, (void*)new_p, (void*)new_p);
+  
+  RBTreeInsert(q, (void*)new_p->cpu_remaining, (void*)new_p);
 }
 
 struct Process* stcf_get_process() {

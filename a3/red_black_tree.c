@@ -668,7 +668,7 @@ void* RBPeek(rb_red_blk_tree* tree)
   while(x->left != nil){
     x = x-> left;
   }
-  return x->key;
+  return x->info;
 }
 
 void* RBPop(rb_red_blk_tree* tree)
@@ -683,7 +683,7 @@ void* RBPop(rb_red_blk_tree* tree)
     x = x-> left;
   }
 
-  p = x->key;
+  p = x->info;
   RBDelete(tree, x);
 
   return p;
