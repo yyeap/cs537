@@ -11,7 +11,7 @@ Header file for statistics functions
 #include "process.h"
 #include "stats.h"
 
-void stats_init (stats* data)
+void init_stats (stats* data)
 {
     data->total_ct = 0;
     data->min_ct = INT_MIN;

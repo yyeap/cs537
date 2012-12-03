@@ -1,3 +1,4 @@
+#include "process.h"
 #include "scheduler.h"
 #include "red_black_tree.h"
 /*
