@@ -11,8 +11,18 @@ Header file for statistics functions
 #include "process.h"
 #include "stats.h"
 
-void init_stats (stats* data)
+static stats* data;
+
+void init_stats ()
 {
+    data = (stats*)malloc(sizeof(stats));
+
+    if (NULL == data)
+    {
+        printf("Error allocating statistics data.");
+        fflush(stdout);
+        exit(-1);
+    }
     data->total_ct = 0;
     data->min_ct = INT_MIN;
     data->max_ct = INT_MAX;
@@ -20,7 +30,7 @@ void init_stats (stats* data)
     data->total_time = 0;
 }
 
-void updateStats(stats* data, struct Process *p, long clock)
+void updateStats(struct Process *p, long clock)
 {
     int ct;
 
@@ -43,7 +53,7 @@ void updateStats(stats* data, struct Process *p, long clock)
     free(p);
 }
 
-void displayStats (stats* data, long clock)
+void displayStats (long clock)
 {
     printf("Average completion time: %.2f\n", (float)data->total_ct / data->jobs);
     printf("Minimum completion time: %li\n", data->min_ct);
