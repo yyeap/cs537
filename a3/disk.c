@@ -46,7 +46,7 @@ struct Process* get_next_io(disk *d)
     return p;
 }
 
-long get_IO_complete (disk* d, long clock)
+long get_IO_complete (disk* d)
 {
-    return (q_isEmpty(d->q))? -1 : (long)d->IO_remain + clock;
+    return (q_isEmpty(d->q))? -1 : (long)d->IO_remain;
 }

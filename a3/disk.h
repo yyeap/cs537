@@ -15,4 +15,4 @@ void update_io_remain (disk *d, int stepTime);
 
 struct Process* get_next_io(disk *d);
 
-long get_IO_complete(disk* d, long clock);
+long get_IO_complete(disk* d);
