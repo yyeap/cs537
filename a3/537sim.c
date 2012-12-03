@@ -9,7 +9,10 @@ Contains implementation of simulator main loop and stuff.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "process.h"
+#include "stcf.h"
+#include "expq.h"
 #include "stats.h"
 #include "scheduler.h"
 #include "disk.h"
@@ -27,16 +30,29 @@ int main (int argc, char* argv[]){
   long ar = 0;
   int* reason = NULL;
 
-  void (*add_process)(struct Process* p, void* q);
-  struct Process* (*get_process)(void* q);
-  long (*get_timeslice)(long c, void* q, long* r);
-  void (*init_q)(void* q);
-
-  if (2 != argc){
-    printf("ERROR: Wrong number of parameter. Need one argument.");
-    return -1;
+  /*use STCF by default*/
+  void (*add_process)(struct Process* p, void* q) = stcf_add_process;
+  struct Process* (*get_process)(void* q) = stcf_get_process;
+  long (*get_timeslice)(long c, void* q, long* r) = stcf_get_timeslice;
+  void (*init_q)(void* q) = stcf_init_q;
+  
+  if (2 < argc){
+    printf("ERROR: 537sim only takes one argument.");
+    exit(-1);
   }
 
+  /*use EXPQ algorithm functions if specified*/
+  /*if user passes bad parameter, just use STCF*/
+  if(!strncmp(argv[1], "expq", 4)){
+    void (*add_process)(struct Process* p, void* q) = expq_add_process;
+    struct Process* (*get_process)(void* q) = expq_get_process;
+    long (*get_timeslice)(long c, void* q, long* r) = expq_get_timeslice;
+    void (*init_q)(void* q) = expq_init_q;
+    printf("Running simulator with EXPQ");
+  } else {
+    printf("Running simulator with STCF");
+  }
+  
   init_stats(stats);
   init_disk(disk);
   init_q(q);
@@ -58,13 +74,13 @@ int main (int argc, char* argv[]){
     }
     
     /*EVENT io has been completed*/
-    if(io <= ts && io <= ar) {
+    if(io <= ts && io <= ar-clock) {
       clock += io;
       update_io_remain(disk, io);
       add_process(q, get_next_io(disk));
     }
     /*EVENT timeslice ends next*/
-    else if (ts <= io && ts <= ar) {
+    else if (ts <= io && ts <= ar-clock) {
       clock += ts;
       /*determine reason for timeslice
 	if IO, add process to disk*/
@@ -81,8 +97,8 @@ int main (int argc, char* argv[]){
     } 
     /*EVENT new process arrival*/
     else {
-      clock += ar;
-      update_io_remain(disk, ar);
+      clock += ar-clock;
+      update_io_remain(disk, ar-clock);
       add_process(q, get_next_process());
     }
   }
