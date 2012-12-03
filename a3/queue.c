@@ -1,10 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
 #include "process.h"
+#include "queue.h"
 
 void q_init(queue* q)
 {
+    q = (queue*)malloc(sizeof(queue));
+
+    if (NULL == q)
+    {
+        printf("Error allocating memory for queue.");
+        fflush(stdout);
+        exit(-1);
+    }
     q->head = NULL;
     q->tail = NULL;
 }
@@ -12,13 +20,17 @@ void q_init(queue* q)
 int enqueue(queue *q, struct Process *p)
 {
     node *newNode =(node*) malloc(sizeof(node));
+
+    if (NULL == newNode)
+    {
+        printf("Error allocating newNode.");
+        fflush(stdout);
+        exit(-1);
+    }
+
     if(NULL == p)
     {
         printf("ERROR: Cannot add null process to queue.");
-        exit(-1);
-    } else if (NULL == newNode)
-    {
-        printf("ERROR: Cannot allocate memory.");
         exit(-1);
     }
 
