@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 struct Process {
     char* name;
     long arrival;
@@ -14,6 +12,4 @@ struct Process {
     long IO_complete;
     long next_io_time;
     long completion_time;
-} ;
-
-extern void DestroyProcess(struct Process *p);
+};
