@@ -1,5 +1,5 @@
 #include "process.h"
-#include "scheduler.h"
+#include "stcf.h"
 #include "red_black_tree.h"
 /*
 stcp.c
@@ -14,18 +14,18 @@ int pCompare(const void* a, const void* b){
 } 
 
 /*insert into rb tree with priority CPU time*/
-void add_process(struct Process* new_p, void* q) {
+void stcf_add_process(struct Process* new_p, void* q) {
   RBTreeInsert((rb_red_blk_tree*)q, (void*)new_p, NULL);
 }
 
-struct Process* get_process(void* q) {
+struct Process* stcf_get_process(void* q) {
   /*examine smallest element and return Process pointer*/
   struct Process* p;
   p = (struct Process*)RBPop((rb_red_blk_tree*)q);
   return p;
 }
 
-long get_timeslice(void* q, int* reason) {
+long stcf_get_timeslice(long clock, void* q, int* reason) {
   /*return time + CPU time of shortest Process or IO time if sooner*/
   struct Process* p;
   long timeslice;
@@ -42,7 +42,7 @@ long get_timeslice(void* q, int* reason) {
   return timeslice;
 }
 
-void init_q(void* q) {
+void stcf_init_q(void* q) {
   /*initialize priority queue*/
   q = (void*)RBTreeCreate(pCompare, NullFunction, NullFunction, NullFunction, NullFunction);
 }
