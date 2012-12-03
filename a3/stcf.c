@@ -17,7 +17,7 @@ int pCompare(const void* a, const void* b){
 
 /*insert into rb tree with priority CPU time*/
 void stcf_add_process(struct Process* new_p) {
-  RBTreeInsert(q, (void*)new_p, 0);
+  RBTreeInsert(q, (void*)new_p, (void*)new_p);
 }
 
 struct Process* stcf_get_process() {
