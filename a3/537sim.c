@@ -8,37 +8,38 @@ Lee Yerkes
 Contains implementation of simulator main loop and stuff.
 */
 
-#include <stdio>
-#include <stdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include "process.h"
 #include "stats.h"
 #include "scheduler.h"
 #include "disk.h"
 
-
 int main (int argc, char* argv[]){
   Process* current_process = NULL;
   Process* next_process = NULL;
-  
   disk* disk;
-  init_disk(disk);
-  
-  stats* stats;
-  init_stats(stats);
-  
   queue* q;
-  init_queue(q);
-  
+  stats* stats;
   int clock = 0;
   int io;
   int ts; 
   int ar;
-
   FILE* tracefile;
- 
+  
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
+  }
+
+  init_stats(stats);
+  init_disk(disk);
+  init_queue(q);
+  
+  tracefile = fopen(arg[1],"r");
+  if(NULL == tracefile) {
+    printf("ERROR: bad trace file path");
+    exit(-1);
   }
  
   while(!done) {
@@ -63,6 +64,5 @@ int main (int argc, char* argv[]){
       current_process;
     }
   }
-
   return 0;
 }
