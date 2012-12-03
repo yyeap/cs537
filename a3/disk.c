@@ -3,16 +3,18 @@ disk.c
  */
 
 #include <stdio.h>
+#include "process.h"
+#include "queue.h"
 #include "disk.h"
 
 #define IOTIME 10
 
-extern void disk_init (disk* d)
+void disk_init (disk* d)
 {
     q_init(d->q);
 }
 
-extern void io_add_process (disk *d, Process *p)
+void io_add_process (disk *d, struct Process *p)
 {
     /* if IO queue is empty, reset IO completion time */
     if (q_isEmpty(d->q))
@@ -26,16 +28,16 @@ extern void io_add_process (disk *d, Process *p)
     }
 }
 
-extern void update_io_remain(disk *d, int stepTime)
+void update_io_remain(disk *d, int stepTime)
 {
     d->IO_remain = d->IO_remain - stepTime;
 }
 
-extern Process* get_next_io(disk *d)
+struct Process* get_next_io(disk *d)
 {
-    Process* p;
+    struct Process* p;
 
-    p = dequeue(d->q);
+    p = (struct Process*)dequeue(d->q);
 
     p->IO_remaining--;
     p->next_io_time = p->IO_interval;
@@ -44,7 +46,7 @@ extern Process* get_next_io(disk *d)
     return p;
 }
 
-extern long get_IO_complete (disk* d, long clock)
+long get_IO_complete (disk* d, long clock)
 {
     return (q_isEmpty(d->q))? -1 : (long)d->IO_remain + clock;
 }

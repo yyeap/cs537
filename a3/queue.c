@@ -1,27 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
+#include "process.h"
 
-extern void q_init(queue* q)
+void q_init(queue* q)
 {
     q->head = NULL;
     q->tail = NULL;
 }
 
-extern int enqueue(queue* q, Process* p)
+int enqueue(queue *q, struct Process *p)
 {
     node *newNode =(node*) malloc(sizeof(node));
     if(NULL == p)
     {
         printf("ERROR: Cannot add null process to queue.");
-        return -1;
+        exit(-1);
     } else if (NULL == newNode)
     {
         printf("ERROR: Cannot allocate memory.");
-        return -1;
+        exit(-1);
     }
 
-    newNode->data = p;
+    newNode->data = (struct Process*)p;
 
     if (NULL == q->head) /* if queue is empty */
     {
@@ -37,9 +38,9 @@ extern int enqueue(queue* q, Process* p)
     return 0;
 }
 
-extern Process* dequeue(queue* q)
+struct Process* dequeue(queue* q)
 {
-    Process* data;
+    struct Process* data;
     node *temp;
 
     if (NULL == q->head)
@@ -62,15 +63,15 @@ extern Process* dequeue(queue* q)
     }
 
     free(temp);
-    return data;
+    return (struct Process*)data;
 }
 
-extern int isEmpty(queue *q)
+int q_isEmpty(queue *q)
 {
     return NULL == q->head;
 }
 
-extern Process* peek (queue* q)
+struct Process* peek (queue* q)
 {
     return q->head->data;
 }

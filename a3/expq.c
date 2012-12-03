@@ -5,6 +5,7 @@ expq.c
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
+#include "process.h"
 #include "scheduler.h"
 
 #define NUM_QUEUE 8
@@ -32,7 +33,7 @@ void init_q(void* qu)
     }
 }
 
-void add_process (Process *p, void* qu)
+void add_process (struct Process *p, void* qu)
 {
     long elapsedTime, timeSlice;
     int priority;
@@ -79,17 +80,17 @@ void add_process (Process *p, void* qu)
     }
 }
 
-Process* get_process(void *qu)
+struct Process* get_process(void *qu)
 {
     int i;
-    Process *next;
+    struct Process *next;
 
     /* lookup all priority, dequeue from highest */
     for (i = 0; i < NUM_QUEUE; i++)
     {
         if (!q_isEmpty(&q[i]))
         {
-            next = (Process*)dequeue(&q[i]);
+            next = (struct Process*)dequeue(&q[i]);
             return next;
         }
     }
@@ -98,10 +99,10 @@ Process* get_process(void *qu)
     return NULL;
 }
 
-long get_timeslice (long time, void* qu)
+int get_timeslice (long time, void* qu)
 {
     long i;
-    Process *temp;
+    struct Process *temp;
 
     temp = NULL;
     /* lookup all priority, peek from highest */
@@ -109,7 +110,7 @@ long get_timeslice (long time, void* qu)
     {
         if (!q_isEmpty(&q[i]))
         {
-            temp = (Process*)peek(&q[i]);
+            temp = (struct Process*)peek(&q[i]);
             break;
         }
     }

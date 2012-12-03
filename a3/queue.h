@@ -1,10 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "process.h"
 
 typedef struct node {
     struct node *next;
-    Process* data;
+    struct Process* data;
 }node;
 
 typedef struct queue {
@@ -12,12 +9,12 @@ typedef struct queue {
     struct node *tail;
 }queue;
 
-extern void q_init(queue* q);
+void q_init(queue* q);
 
-extern int enqueue(queue* q, Process* p);
+int enqueue(queue *q, struct Process *p);
 
-extern Process* dequeue(queue* q);
+struct Process* dequeue(queue *q);
 
-extern int isEmpty(queue* q);
+int q_isEmpty(queue* q);
 
-extern Process* peek (queue* q);
+struct Process* peek (queue* q);

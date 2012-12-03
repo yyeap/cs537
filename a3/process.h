@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-typedef struct process {
+struct Process {
     char* name;
     long arrival;
     long cpu;
@@ -14,6 +14,6 @@ typedef struct process {
     long IO_complete;
     long next_io_time;
     long completion_time;
-} Process;
+} ;
 
-extern void DestroyProcess(Process *p);
+extern void DestroyProcess(struct Process *p);

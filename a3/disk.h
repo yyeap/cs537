@@ -2,20 +2,17 @@
 disk.h
 */
 
-#include <stdio.h>
-#include "queue.h"
-
 typedef struct disk {
-    queue* q;
+    struct queue* q;
     int IO_remain;
 } disk;
 
-extern void disk_init(disk* d);
+void disk_init(disk* d);
 
-extern void io_add_process(disk *d, Process *p);
+void io_add_process(disk *d, struct Process *p);
 
-extern void update_io_remain (disk *d, int stepTime);
+void update_io_remain (disk *d, int stepTime);
 
-extern Process* get_next_io(disk *d);
+struct Process* get_next_io(disk *d);
 
-extern long get_IO_complete(disk* d, long clock);
+long get_IO_complete(disk* d, long clock);
