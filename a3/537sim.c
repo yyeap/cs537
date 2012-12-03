@@ -30,7 +30,7 @@ int main (int argc, char* argv[]){
   long ts = 0;
   long ar = 0;
   long stepTime = 0;
-  int* reason;
+  int reason;
 
   /*use STCF by default*/
   add_process = stcf_add_process;
@@ -61,7 +61,7 @@ int main (int argc, char* argv[]){
   init_q();
   current_process = NULL;
   temp_process = NULL;
-  reason = (int*)malloc(sizeof(int));
+  reason = 0;
 
   while(1) {
     if (NULL != current_process) {
@@ -70,13 +70,16 @@ int main (int argc, char* argv[]){
     }
 
     io = get_IO_complete();
-    ts = get_timeslice(clock, reason);
+    ts = get_timeslice(clock, &reason);
     ar = get_arrival();
 
     /*EVENT simulation completed*/
     if(ar == -1 && ts == -1) {
       /*display stats, destroy and exit*/
-      exit(0);
+      displayStats(clock);
+      free(current_process);
+      free(temp_process);
+        exit(0);
     }
 
     if (ar <= clock)
@@ -119,13 +122,13 @@ int main (int argc, char* argv[]){
 
         else if (stepTime == ts)
         {
-            switch (*reason)
+            switch (reason)
             {
                 case 0:
-                    current_process = get_process();
-                    current_process->cpu_remaining -= ts + 1;
-                    current_process->lastRunTime += ts;
-                    io_add_process(current_process);
+                    temp_process = get_process();
+                    temp_process->cpu_remaining -= ts + 1;
+                    temp_process->lastRunTime += ts;
+                    io_add_process(temp_process);
                     clock += ts + 1;
                     break;
                 case 1:
@@ -134,7 +137,10 @@ int main (int argc, char* argv[]){
                     break;
 
                 case 2:
-
+                    temp_process = get_process();
+                    temp_process->cpu_remaining -= ts;
+                    temp_process->lastRunTime += ts;
+                    add_process(temp_process);
                     break;
                 default:
                     printf("Unexpected error\n");
@@ -142,46 +148,6 @@ int main (int argc, char* argv[]){
             }
         }
     }
-    /**
-     *
-     * if(stepTime == io && stepTime != -1){
-     *      increment clock + CONTEXT_SWITCH
-     *      remove process from IO queue
-     *      update process fields
-     *      add to scheduler
-     * }
-     * else if (stepTime == ts){
-     *  switch(*reason){
-     *  case 0: IO starts
-     *      remove from scheduler
-     *      put process into IO queue
-     *      increment clock + CONTEXT_SWITCH
-     *      break;
-     *
-     *  case 1: process completes
-     *      remove from the scheduler
-     *      update stats
-     *      break;
-     *
-     *  case 2: time slice is up (only for expq)
-     *      remove from scheduler
-     *
-     *      break;
-     *
-     *  default:
-     *      ERROR!
-     *  }
-     * } else {
-     *
-     * }
-     * current_process = get_next_process()
-     *
-     *
-     *
-     *
-     *
-     *
-     */
   }
   return 0;
 }
