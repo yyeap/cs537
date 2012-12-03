@@ -2,16 +2,20 @@
 
 typedef struct process {
     char* name;
-    int arrival;
-    int cpu;
-    int IO_count;
-    int cpu_remaining;
-    int IO_remaining;
-    int IO_interval;
-    int IO_operations;
-    int IO_complete;
+    long arrival;
+    long cpu;
+    long IO_count;
+    long priority;
+    long lastRunTime;
+    long cpu_remaining;
+    long IO_remaining;
+    long IO_interval;
+    long IO_operations;
+    long IO_complete;
+    long next_io_time;
+    long completion_time;
 } Process;
 
-extern Process* CreateProcess(char* name, int arrival, int cpu, int IO_count);
+extern Process* CreateProcess(char* name, long arrival, long cpu, lomg IO_count);
 
-extern void DestroyProcess(Process* p);
+extern void DestroyProcess (Process *p);
