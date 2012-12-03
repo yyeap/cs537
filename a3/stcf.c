@@ -2,8 +2,10 @@
 #include "stcf.h"
 #include "red_black_tree.h"
 /*
-stcp.c
+stcf.c
 */
+
+rb_red_blk_tree* q;
 
 /*struct Process cpu time comparison for rb tree*/
 int pCompare(const void* a, const void* b){
@@ -14,22 +16,22 @@ int pCompare(const void* a, const void* b){
 } 
 
 /*insert into rb tree with priority CPU time*/
-void stcf_add_process(struct Process* new_p, void* q) {
-  RBTreeInsert((rb_red_blk_tree*)q, (void*)new_p, NULL);
+void stcf_add_process(struct Process* new_p) {
+  RBTreeInsert(q, (void*)new_p, NULL);
 }
 
-struct Process* stcf_get_process(void* q) {
+struct Process* stcf_get_process() {
   /*examine smallest element and return Process pointer*/
   struct Process* p;
-  p = (struct Process*)RBPop((rb_red_blk_tree*)q);
+  p = (struct Process*)RBPop(q);
   return p;
 }
 
-long stcf_get_timeslice(long clock, void* q, int* reason) {
+long stcf_get_timeslice(long clock, int* reason) {
   /*return time + CPU time of shortest Process or IO time if sooner*/
   struct Process* p;
   long timeslice;
-  p = (struct Process*)RBPeek((rb_red_blk_tree*)q);
+  p = (struct Process*)RBPeek(q);
   
   if(p->IO_remaining == 0 || p->cpu_remaining < p->time_until_io){
     *reason = 0;
@@ -42,7 +44,7 @@ long stcf_get_timeslice(long clock, void* q, int* reason) {
   return timeslice;
 }
 
-void stcf_init_q(void* q) {
+void stcf_init_q() {
   /*initialize priority queue*/
-  q = (void*)RBTreeCreate(pCompare, NullFunction, NullFunction, NullFunction, NullFunction);
+  q = RBTreeCreate(pCompare, NullFunction, NullFunction, NullFunction, NullFunction);
 }
