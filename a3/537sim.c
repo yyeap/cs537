@@ -18,14 +18,14 @@ Contains implementation of simulator main loop and stuff.
 int main (int argc, char* argv[]){
   struct Process* current_process = NULL;
   struct Process* next_process = NULL;
-  disk* disk;
-  void* q;
-  stats* stats;
+  disk* disk = NULL;
+  void* q = NULL;
+  stats* stats = NULL;
   long clock = 0;
-  long io;
-  long ts;
-  long ar;
-  int* reason;
+  long io = 0;
+  long ts = 0;
+  long ar = 0;
+  int* reason = NULL;
 
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
