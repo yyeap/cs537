@@ -1,21 +1,11 @@
 #include "process.h"
-/*
-Yuen Lye Yeap
-Lee Yerkes
-cs537 Project 3
 
-input.h
-*/
+extern void input_init();
 
-/*
-traceToProcess
+void get_next_line();
 
-this function parses one line of a trace file
+extern long get_arrival();
 
-in:
-char* line - a line from the trace file to be parsed
+extern Process* get_next_process();
 
-return:
-Process pointer to the new Process
- */
-Process* p parseTrace(char* line);
+extern void input_destroy();
