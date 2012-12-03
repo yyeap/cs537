@@ -25,7 +25,7 @@ struct Process* get_process(void* q) {
   return p;
 }
 
-long get_timeslice(long time, void* q, int* reason) {
+long get_timeslice(void* q, int* reason) {
   /*return time + CPU time of shortest Process or IO time if sooner*/
   struct Process* p;
   long timeslice;
@@ -33,10 +33,10 @@ long get_timeslice(long time, void* q, int* reason) {
   
   if(p->IO_remaining == 0 || p->cpu_remaining < p->time_until_io){
     *reason = 0;
-    timeslice = p->cpu_remaining + time;
+    timeslice = p->cpu_remaining;
   } else {
     *reason = 2;
-    timeslice = p->time_until_io + time;
+    timeslice = p->time_until_io;
     p->time_until_io = p->IO_interval;
   }
   return timeslice;

@@ -27,6 +27,11 @@ int main (int argc, char* argv[]){
   long ar = 0;
   int* reason = NULL;
 
+  void (*add_process)(struct Process* p, void* q);
+  struct Process* (*get_process)(void* q);
+  long (*get_timeslice)(long c, void* q, long* r);
+  void (*init_q)(void* q);
+
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
@@ -42,7 +47,7 @@ int main (int argc, char* argv[]){
       update_io_remain(disk, 1); 
     }
 
-    io = get_IO_complete(disk, clock);
+    io = get_IO_complete(disk);
     ts = get_timeslice(clock, q, reason);
     ar = get_arrival();
 
@@ -53,7 +58,7 @@ int main (int argc, char* argv[]){
     }
     
     /*EVENT io has been completed*/
-    if(io == 1) {
+    if(io <= ts && io <= ar) {
       clock += io;
       update_io_remain(disk, io);
       add_process(q, get_next_io(disk));
@@ -79,7 +84,6 @@ int main (int argc, char* argv[]){
       clock += ar;
       update_io_remain(disk, ar);
       add_process(q, get_next_process());
-      
     }
   }
   return 0;
