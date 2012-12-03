@@ -662,12 +662,10 @@ stk_stack* RBEnumerate(rb_red_blk_tree* tree, void* low, void* high) {
 
 void* RBPeek(rb_red_blk_tree* tree)
 {
-  rb_red_blk_node* x;
+  rb_red_blk_node* x = tree->root;
   rb_red_blk_node* nil = tree->nil;
-  rb_red_blk_node* root = tree->root;
 
-  x = root;
-  while(nil != x->left){
+  while(x->left != nil){
     x = x-> left;
   }
   return x->key;

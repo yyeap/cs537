@@ -32,7 +32,12 @@ long stcf_get_timeslice(long clock, int* reason) {
   struct Process* p;
   long timeslice;
   p = (struct Process*)RBPeek(q);
-  
+
+  if(NULL == p) {
+    /*tree is empty*/
+    return -1;
+  }
+
   if(p->IO_remaining == 0 || p->cpu_remaining < p->time_until_io){
     *reason = 0;
     timeslice = p->cpu_remaining;
