@@ -19,7 +19,7 @@ extern void stats_init (stats* data)
     data->total_time = 0;
 }
 
-extern void updateStats(stats* data, Process* p, int clock)
+extern void updateStats(stats* data, Process* p, long clock)
 {
     int ct;
 
@@ -42,7 +42,7 @@ extern void updateStats(stats* data, Process* p, int clock)
     free(p);
 }
 
-extern void displayStats (stats* data, int clock)
+extern void displayStats (stats* data, long clock)
 {
     printf("Average completion time: %.2f\n", (float)data->total_ct / data->jobs);
     printf("Minimum completion time: %d\n", data->min_ct);
