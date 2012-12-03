@@ -23,14 +23,14 @@ int enqueue(queue *q, struct Process *p)
 
     if (NULL == newNode)
     {
-        printf("Error allocating newNode.");
+        printf("Error allocating newNode.\n");
         fflush(stdout);
         exit(-1);
     }
 
     if(NULL == p)
     {
-        printf("ERROR: Cannot add null process to queue.");
+        printf("ERROR: Cannot add null process to queue.\n");
         exit(-1);
     }
 
@@ -57,7 +57,8 @@ struct Process* dequeue(queue* q)
 
     if (NULL == q->head)
     {
-        printf("ERROR: Cannot dequeue from an empty queue.");
+        printf("ERROR: Cannot dequeue from an empty queue.\n");
+        fflush(stdout);
         return NULL;
     }
 

@@ -24,10 +24,12 @@ void (*init_q)(void);
 
 int main (int argc, char* argv[]){
   struct Process* current_process;
+  struct Process* temp_process;
   long clock = 0;
   long io = 0;
   long ts = 0;
   long ar = 0;
+  long stepTime = 0;
   int* reason;
 
   /*use STCF by default*/
@@ -43,23 +45,23 @@ int main (int argc, char* argv[]){
 
   /*use EXPQ algorithm functions if specified*/
   /*if user passes bad parameter, just use STCF*/
-  /*
+
   if(!strncmp(argv[1], "expq", 4)){
     add_process = expq_add_process;
     get_process = expq_get_process;
     get_timeslice = expq_get_timeslice;
     init_q = expq_init_q;
-    printf("Running simulator with EXPQ");
+    printf("Running simulator with EXPQ\n");
   } else {
-    printf("Running simulator with STCF");
-
-  }*/
+    printf("Running simulator with STCF\n");
+  }
 
   init_stats();
   init_disk();
   init_q();
   current_process = NULL;
-  reason = NULL;
+  temp_process = NULL;
+  reason = (int*)malloc(sizeof(int));
 
   while(1) {
     if (NULL != current_process) {
@@ -77,34 +79,109 @@ int main (int argc, char* argv[]){
       exit(0);
     }
 
-    /*EVENT io has been completed*/
-    if(io <= ts && io <= ar-clock) {
-      clock += io;
-      update_io_remain(io);
-      add_process(get_next_io());
+    if (ar <= clock)
+    {
+        if (current_process != NULL)
+        {
+            current_process = get_process();
+            current_process->cpu_remaining -= (ar - clock);
+            current_process->lastRunTime += (ar - clock);
+            add_process(current_process);
+        }
+        /* fetch new process from trace */
+        current_process = get_next_process();
+        add_process(current_process);
     }
-    /*EVENT timeslice ends next*/
-    else if (ts <= io && ts <= ar-clock) {
-      clock += ts;
-      /*determine reason for timeslicet
-	if IO, add process to disk*/
-      if(*reason == 2){
-	io_add_process(get_process());
-      }
-      else if (*reason == 0) {
-	/*if done, collect statistics*/
-      }
-      else if(*reason == 1) {
-	/*if timeslice ended, return to queue*/
-      }
-      update_io_remain(ts);
+    else
+    {
+        /* stepTime = min (io, ts, ar - clock) */
+        if (io <= ts && io <= (ar - clock))
+        {
+            stepTime = io;
+        }
+
+        else if (ts <= io && ts <= (ar - clock))
+        {
+            stepTime = ts;
+        }
+
+        else
+        {
+            stepTime = ar - clock;
+        }
+
+        if (stepTime == io && stepTime != -1)
+        {
+            temp_process = get_next_io();
+            add_process(temp_process);
+            clock += stepTime + 1;
+        }
+
+        else if (stepTime == ts)
+        {
+            switch (*reason)
+            {
+                case 0:
+                    current_process = get_process();
+                    current_process->cpu_remaining -= ts + 1;
+                    current_process->lastRunTime += ts;
+                    io_add_process(current_process);
+                    clock += ts + 1;
+                    break;
+                case 1:
+                    current_process = get_process();
+                    updateStats(current_process, clock);
+                    break;
+
+                case 2:
+
+                    break;
+                default:
+                    printf("Unexpected error\n");
+                    exit(-1);
+            }
+        }
     }
-    /*EVENT new process arrival*/
-    else {
-      clock += ar-clock;
-      update_io_remain(ar-clock);
-      add_process(get_next_process());
-    }
+    /**
+     *
+     * if(stepTime == io && stepTime != -1){
+     *      increment clock + CONTEXT_SWITCH
+     *      remove process from IO queue
+     *      update process fields
+     *      add to scheduler
+     * }
+     * else if (stepTime == ts){
+     *  switch(*reason){
+     *  case 0: IO starts
+     *      remove from scheduler
+     *      put process into IO queue
+     *      increment clock + CONTEXT_SWITCH
+     *      break;
+     *
+     *  case 1: process completes
+     *      remove from the scheduler
+     *      update stats
+     *      break;
+     *
+     *  case 2: time slice is up (only for expq)
+     *      remove from scheduler
+     *
+     *      break;
+     *
+     *  default:
+     *      ERROR!
+     *  }
+     * } else {
+     *
+     * }
+     * current_process = get_next_process()
+     *
+     *
+     *
+     *
+     *
+     *
+     */
   }
   return 0;
 }

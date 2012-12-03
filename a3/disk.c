@@ -19,7 +19,7 @@ void init_disk ()
 
     if (NULL == d)
     {
-        printf("Error allocating disk queue.");
+        printf("Error allocating disk queue.\n");
         fflush(stdout);
         exit(-1);
     }
@@ -52,6 +52,10 @@ struct Process* get_next_io()
 
     p = (struct Process*)dequeue(d);
 
+    if (NULL == p)
+    {
+        return NULL;
+    }
     p->IO_remaining--;
     p->next_io_time = p->IO_interval;
     IO_remain = IOTIME;
