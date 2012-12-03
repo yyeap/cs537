@@ -6,7 +6,7 @@ expq.c
 #include <stdlib.h>
 #include "queue.h"
 #include "process.h"
-#include "scheduler.h"
+#include "expq.h"
 
 #define NUM_QUEUE 8
 #define BASE_TIMESLICE 10
@@ -14,7 +14,7 @@ expq.c
 static queue q[NUM_QUEUE];
 static int timeSlices[NUM_QUEUE];
 
-void init_q(void* qu)
+void expq_init_q()
 {
     int i;
 
@@ -33,7 +33,7 @@ void init_q(void* qu)
     }
 }
 
-void add_process (struct Process *p, void* qu)
+void expq_add_process (struct Process *p)
 {
     long elapsedTime, timeSlice;
     int priority;
@@ -80,7 +80,7 @@ void add_process (struct Process *p, void* qu)
     }
 }
 
-struct Process* get_process(void *qu)
+struct Process* expq_get_process()
 {
     int i;
     struct Process *next;
@@ -99,7 +99,7 @@ struct Process* get_process(void *qu)
     return NULL;
 }
 
-long get_timeslice (long time, void* qu, int *reason)
+long expq_get_timeslice (long time, int *reason)
 {
     long i;
     struct Process *temp;
