@@ -7,10 +7,10 @@ Lee Yerkes
 scheduler.h
  */
 
-void add_process(Process* new_p, void* q);
+void add_process(Process*, void*);
 
-Process* get_process(void* q);
+Process* get_process(void*);
 
-int get_timeslice(int time, void* q);
+int get_timeslice(long, void*);
 
-void init_q(void* q);
+void init_q(void*);

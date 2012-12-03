@@ -98,9 +98,9 @@ Process* get_process(void *qu)
     return NULL;
 }
 
-int get_timeslice (int time, void* qu)
+long get_timeslice (long time, void* qu)
 {
-    int i;
+    long i;
     Process *temp;
 
     temp = NULL;

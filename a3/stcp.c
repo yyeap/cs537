@@ -24,7 +24,7 @@ Process* get_process(void* q) {
   return p;
 }
 
-int get_timeslice(int time, void* q) {
+long get_timeslice(long time, void* q) {
   /*return time + CPU time of shortest process*/
   Process* p;
   p = (Process*)RBPeek((rb_red_blk_tree*)q);

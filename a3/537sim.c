@@ -21,10 +21,10 @@ int main (int argc, char* argv[]){
   disk* disk;
   queue* q;
   stats* stats;
-  int clock = 0;
-  int io;
-  int ts; 
-  int ar;
+  long clock = 0;
+  long io;
+  long ts; 
+  long ar;
   FILE* tracefile;
   
   if (2 != argc){
