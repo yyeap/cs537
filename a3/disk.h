@@ -7,9 +7,15 @@ disk.h
 
 typedef struct disk {
     queue* q;
-    int size;
+    int IO_remain;
 } disk;
 
 extern void disk_init(disk* d);
 
-extern int get_IO_complete(disk* d, int clock);
+extern void io_add_process(disk *d, Process *p);
+
+extern void update_io_remain (disk *d, int stepTime);
+
+extern Process* get_next_io(disk *d);
+
+extern long get_IO_complete(disk* d, long clock);
