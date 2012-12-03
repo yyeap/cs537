@@ -25,7 +25,6 @@ int main (int argc, char* argv[]){
   long io;
   long ts;
   long ar;
-  FILE* tracefile;
   int* reason;
 
   if (2 != argc){
@@ -80,6 +79,7 @@ int main (int argc, char* argv[]){
       clock += ar;
       update_io_remain(disk, ar);
       add_process(q, get_next_process());
+      
     }
   }
   return 0;
