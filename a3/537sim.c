@@ -14,28 +14,30 @@ Contains implementation of simulator main loop and stuff.
 #include "stcf.h"
 #include "expq.h"
 #include "stats.h"
-#include "scheduler.h"
 #include "disk.h"
 #include "input.h"
 
+void (*add_process)(struct Process*, void*);
+struct Process* (*get_process)(void*);
+long (*get_timeslice)(long, void*, int*);
+void (*init_q)(void*);
+
 int main (int argc, char* argv[]){
-  struct Process* current_process = NULL;
-  struct Process* next_process = NULL;
-  disk* disk = NULL;
-  void* q = NULL;
-  stats* stats = NULL;
+  struct Process* current_process;
+  void* q;
+  stats* stats;
   long clock = 0;
   long io = 0;
   long ts = 0;
   long ar = 0;
-  int* reason = NULL;
+  int* reason;
 
   /*use STCF by default*/
-  void (*add_process)(struct Process* p, void* q) = stcf_add_process;
-  struct Process* (*get_process)(void* q) = stcf_get_process;
-  long (*get_timeslice)(long c, void* q, long* r) = stcf_get_timeslice;
-  void (*init_q)(void* q) = stcf_init_q;
-  
+  add_process = stcf_add_process;
+  get_process = stcf_get_process;
+  get_timeslice = stcf_get_timeslice;
+  init_q = stcf_init_q;
+
   if (2 < argc){
     printf("ERROR: 537sim only takes one argument.");
     exit(-1);
@@ -43,49 +45,53 @@ int main (int argc, char* argv[]){
 
   /*use EXPQ algorithm functions if specified*/
   /*if user passes bad parameter, just use STCF*/
+  /*
   if(!strncmp(argv[1], "expq", 4)){
-    void (*add_process)(struct Process* p, void* q) = expq_add_process;
-    struct Process* (*get_process)(void* q) = expq_get_process;
-    long (*get_timeslice)(long c, void* q, long* r) = expq_get_timeslice;
-    void (*init_q)(void* q) = expq_init_q;
+    add_process = expq_add_process;
+    get_process = expq_get_process;
+    get_timeslice = expq_get_timeslice;
+    init_q = expq_init_q;
     printf("Running simulator with EXPQ");
   } else {
     printf("Running simulator with STCF");
-  }
-  
+
+  }*/
+
   init_stats(stats);
-  init_disk(disk);
+  init_disk();
   init_q(q);
-  
+  current_process = NULL;
+  reason = NULL;
+
   while(1) {
     if (NULL != current_process) {
       clock++;
-      update_io_remain(disk, 1); 
+      update_io_remain(1);
     }
 
-    io = get_IO_complete(disk);
+    io = get_IO_complete();
     ts = get_timeslice(clock, q, reason);
     ar = get_arrival();
 
     /*EVENT simulation completed*/
     if(ar == -1 && ts == -1) {
-      //display stats, destroy and exit
+      /*display stats, destroy and exit*/
       exit(0);
     }
-    
+
     /*EVENT io has been completed*/
     if(io <= ts && io <= ar-clock) {
       clock += io;
-      update_io_remain(disk, io);
-      add_process(q, get_next_io(disk));
+      update_io_remain(io);
+      add_process(q, get_next_io());
     }
     /*EVENT timeslice ends next*/
     else if (ts <= io && ts <= ar-clock) {
       clock += ts;
-      /*determine reason for timeslice
+      /*determine reason for timeslicet
 	if IO, add process to disk*/
       if(*reason == 2){
-	io_add_process(disk, get_process(q));
+	io_add_process(get_process(q));
       }
       else if (*reason == 0) {
 	/*if done, collect statistics*/
@@ -93,12 +99,12 @@ int main (int argc, char* argv[]){
       else if(*reason == 1) {
 	/*if timeslice ended, return to queue*/
       }
-      update_io_remain(disk, ts);
-    } 
+      update_io_remain(ts);
+    }
     /*EVENT new process arrival*/
     else {
       clock += ar-clock;
-      update_io_remain(disk, ar-clock);
+      update_io_remain(ar-clock);
       add_process(q, get_next_process());
     }
   }

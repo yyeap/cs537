@@ -3,50 +3,66 @@ disk.c
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "process.h"
 #include "queue.h"
 #include "disk.h"
 
 #define IOTIME 10
 
-void init_disk (disk* d)
+static queue* d;
+static int IO_remain;
+
+void init_disk ()
 {
-    q_init(d->q);
+    d = (queue*)malloc(sizeof(queue));
+
+    if (NULL == d)
+    {
+        printf("Error allocating disk queue.");
+        fflush(stdout);
+        exit(-1);
+    }
+    q_init(d);
+    IO_remain = 0;
 }
 
-void io_add_process (disk *d, struct Process *p)
+void io_add_process (struct Process *p)
 {
     /* if IO queue is empty, reset IO completion time */
-    if (q_isEmpty(d->q))
+    if (q_isEmpty(d))
     {
-        enqueue(d->q, p);
-        d->IO_remain = IOTIME;
+        enqueue(d, p);
+        IO_remain = IOTIME;
     }
     else
     {
-        enqueue(d->q, p);
+        enqueue(d, p);
     }
 }
 
-void update_io_remain(disk *d, int stepTime)
+void update_io_remain(int stepTime)
 {
-    d->IO_remain = d->IO_remain - stepTime;
+    IO_remain = IO_remain - stepTime;
 }
 
-struct Process* get_next_io(disk *d)
+struct Process* get_next_io()
 {
     struct Process* p;
 
-    p = (struct Process*)dequeue(d->q);
+    p = (struct Process*)dequeue(d);
 
     p->IO_remaining--;
     p->next_io_time = p->IO_interval;
-    d->IO_remain = IOTIME;
+    IO_remain = IOTIME;
 
     return p;
 }
 
-long get_IO_complete (disk* d)
+long get_IO_complete ()
 {
-    return (q_isEmpty(d->q))? -1 : (long)d->IO_remain;
+    if (q_isEmpty(d)){
+        return -1;
+    }
+    return (long)IO_remain;
 }
