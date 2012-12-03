@@ -41,6 +41,7 @@ void expq_add_process (struct Process *p)
     if (NULL == p)
     {
         printf("ERROR: Cannot add null process to queue.");
+        fflush(stdout);
         exit(-1);
     }
 
@@ -114,5 +115,32 @@ long expq_get_timeslice (long time, int *reason)
             break;
         }
     }
-    return (NULL != temp)? temp->cpu_remaining + time : -1;
+
+    if (NULL != temp)
+    {
+        /* process completes */
+        if (temp->cpu_remaining == 0)
+        {
+            *reason = 1;
+            return temp->cpu_remaining;
+        }
+
+        /* IO starts */
+        if(temp->time_until_io <= temp->cpu_remaining
+            && temp->time_until_io <= timeSlices[temp->priority])
+        {
+            *reason = 1;
+            return temp->time_until_io;
+        }
+
+        /* timeslice is up */
+        if (temp->lastRunTime >= timeSlices[temp->priority])
+        {
+            *reason = 2;
+            return timeSlices[temp->priority];
+        }
+        *reason = 3;
+        return temp->lastRunTime;
+    }
+    return -1;
 }
