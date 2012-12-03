@@ -17,15 +17,13 @@ Contains implementation of simulator main loop and stuff.
 #include "disk.h"
 #include "input.h"
 
-void (*add_process)(struct Process*, void*);
-struct Process* (*get_process)(void*);
-long (*get_timeslice)(long, void*, int*);
-void (*init_q)(void*);
+void (*add_process)(struct Process*);
+struct Process* (*get_process)(void);
+long (*get_timeslice)(long, int*);
+void (*init_q)(void);
 
 int main (int argc, char* argv[]){
   struct Process* current_process;
-  void* q;
-  stats* stats;
   long clock = 0;
   long io = 0;
   long ts = 0;
@@ -57,9 +55,9 @@ int main (int argc, char* argv[]){
 
   }*/
 
-  init_stats(stats);
+  init_stats();
   init_disk();
-  init_q(q);
+  init_q();
   current_process = NULL;
   reason = NULL;
 
@@ -70,7 +68,7 @@ int main (int argc, char* argv[]){
     }
 
     io = get_IO_complete();
-    ts = get_timeslice(clock, q, reason);
+    ts = get_timeslice(clock, reason);
     ar = get_arrival();
 
     /*EVENT simulation completed*/
@@ -83,7 +81,7 @@ int main (int argc, char* argv[]){
     if(io <= ts && io <= ar-clock) {
       clock += io;
       update_io_remain(io);
-      add_process(q, get_next_io());
+      add_process(get_next_io());
     }
     /*EVENT timeslice ends next*/
     else if (ts <= io && ts <= ar-clock) {
@@ -91,7 +89,7 @@ int main (int argc, char* argv[]){
       /*determine reason for timeslicet
 	if IO, add process to disk*/
       if(*reason == 2){
-	io_add_process(get_process(q));
+	io_add_process(get_process());
       }
       else if (*reason == 0) {
 	/*if done, collect statistics*/
@@ -105,7 +103,7 @@ int main (int argc, char* argv[]){
     else {
       clock += ar-clock;
       update_io_remain(ar-clock);
-      add_process(q, get_next_process());
+      add_process(get_next_process());
     }
   }
   return 0;
