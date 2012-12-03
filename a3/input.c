@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <unistd.h>
-#include "input.h"
 #include "process.h"
+#include "input.h"
 
 #define CMD_SIZE 10
 #define MAXINT 20
@@ -14,12 +14,19 @@
 
 static struct Process *p;
 static int eof;
-static int hasNewProcess;
+static int hasNewProcess = 1;
 
 /* Initialize private member in input */
 void input_init()
 {
-    p = NULL;
+    p = (struct Process*)malloc(sizeof(struct Process));
+
+    if (NULL == p)
+    {
+        printf("Error allocating process.");
+        fflush(stdout);
+        exit(-1);
+    }
     eof = 0;
     hasNewProcess = 1;
 }
@@ -42,7 +49,7 @@ void get_next_line()
     /* read command name */
     while(1)
     {
-        c = getc(stdin);
+        c = fgetc(stdin);
 
         /* set EOF flag if reach end of file */
         if (feof(stdin))
@@ -63,7 +70,7 @@ void get_next_line()
             /* skip all spaces between input segments */
             while (' ' == c || '\t' == c)
             {
-                c = getc(stdin);
+                c = fgetc(stdin);
             } /* c will contain the first character of arrival time at the end of the last iteration */
 
             nameFlag = 1;
@@ -90,7 +97,7 @@ void get_next_line()
 
             while (' ' == c || '\t' == c)
             {
-                c = getc(stdin);
+                c = fgetc(stdin);
             } /* c contains first character of CPU time */
 
             startFlag = 1;
@@ -98,7 +105,7 @@ void get_next_line()
         else
         {
             start[ct++] = c;
-            c = getc(stdin);
+            c = fgetc(stdin);
         }
 
         if (startFlag)
@@ -118,7 +125,7 @@ void get_next_line()
 
             while (' ' == c || '\t' == c)
             {
-                c = getc(stdin);
+                c = fgetc(stdin);
             }
 
             cpuFlag = 1;
@@ -126,7 +133,7 @@ void get_next_line()
         else
         {
             CPU[ct++] = c;
-            c = getc(stdin);
+            c = fgetc(stdin);
         }
 
         if (cpuFlag)
@@ -148,7 +155,7 @@ void get_next_line()
         else
         {
             IONum[ct++] = c;
-            c = getc(stdin);
+            c = fgetc(stdin);
         }
 
         if (ioCountFlag)
@@ -238,7 +245,6 @@ long get_arrival()
 
         get_next_line();
         hasNewProcess = 0;
-
         if (eof)
         {
             return -1;
