@@ -99,7 +99,7 @@ struct Process* get_process(void *qu)
     return NULL;
 }
 
-int get_timeslice (long time, void* qu)
+long get_timeslice (long time, void* qu, int *reason)
 {
     long i;
     struct Process *temp;
