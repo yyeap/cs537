@@ -12,4 +12,5 @@ struct Process {
     long IO_complete;
     long next_io_time;
     long completion_time;
+    int time_until_io;
 };
