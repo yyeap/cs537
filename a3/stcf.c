@@ -38,6 +38,8 @@ long stcf_get_timeslice(long clock, int* reason) {
     return -1;
   }
 
+  /*determine the reason for the timeslice ending and return it*/
+  /*reason goes in output variable 'reason'*/
   if(p->IO_remaining == 0 || p->cpu_remaining < p->time_until_io){
     *reason = 0;
     timeslice = p->cpu_remaining;

@@ -2,7 +2,15 @@ CS 537 - Assignment 3 - Dec 3 2012
 Yuen Lye Yeap
 Lee Yerkes
 
+Currently our simulator is not working. We ran into many design and technical issues as we brought the modules together in the main loop.
+
+Choose between STCF and EXPQ schedulers by using "expq" as argument.
+Simulator uses STCF by default.
+
+Red black tree implementation taken from Emin Martinian's mit.edu page.
+
 Files:
+
 537sim.c
 disk.c
 disk.h
@@ -27,4 +35,4 @@ stats.h
 stcf.c
 stcf.h
 
-Compiled and ran in mumble lab.
+Compiled in mumble lab.
