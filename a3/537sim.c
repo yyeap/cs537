@@ -21,26 +21,29 @@ int main (int argc, char* argv[]){
   disk* disk;
   queue* q;
   stats* stats;
-  long clock = 0;
+  long clock;
   long io;
   long ts;
   long ar;
   FILE* tracefile;
-  int reason;
+  int *reason;
 
   if (2 != argc){
     printf("ERROR: Wrong number of parameter. Need one argument.");
     return -1;
   }
 
+  clock = 0;
+  *reason = -1;
+
   init_stats(stats);
   init_disk(disk);
   init_queue(q);
-  
+
   while(1) {
     if (NULL != current_process) {
       clock++;
-      update_io_remain(disk, 1); 
+      update_io_remain(disk, 1);
     }
 
     io = get_IO_Complete(disk, clock);
@@ -49,10 +52,17 @@ int main (int argc, char* argv[]){
 
     /*EVENT simulation completed*/
     if(ar == -1 && get_timeslice/*add get_timeslice empty case*/) {
-      //display stats, destroy and exit
+      /* display stats, destroy and exit */
+      displayStats(stats, clock);
+
+      /* free up resources before terminate simulator */
+      free(current_process);
+      free(next_process);
+      free(disk);
+      free(q);
       exit(0);
     }
-    
+
     /*EVENT io has been completed*/
     if(io == 1) {
       clock += io;
@@ -64,17 +74,18 @@ int main (int argc, char* argv[]){
       clock += ts;
       /*determine reason for timeslice
 	if IO, add process to disk*/
-      if(reason == 2){
+      if(*reason == 2){
 	io_add_process(disk, get_process(q));
       }
-      else if (reason == 0) {
+      else if (*reason == 0) {
 	/*if done, collect statistics*/
+          updateStats(stats, current_process, clock);
       }
-      else if(reason == 1) {
+      else if(*reason == 1) {
 	/*if timeslice ended, return to queue*/
       }
       update_io_remain(disk, ts);
-    } 
+    }
     /*EVENT new process arrival*/
     else {
       clock += ar;
