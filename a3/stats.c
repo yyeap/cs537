@@ -38,6 +38,8 @@ extern void updateStats(stats* data, Process* p, int clock)
 
     data->jobs++;
     data->total_time += p->cpu;
+
+    free(p);
 }
 
 extern void displayStats (stats* data, int clock)
@@ -47,4 +49,7 @@ extern void displayStats (stats* data, int clock)
     printf("Maximum completion time: %d\n", data->max_ct);
     printf("Throughput: %.2f\n", (float)(data->jobs / clock) / 1000);
     printf("Utilization: %d\tPercent utilization: %.2f\n", data->total_time, (float)data->total_time / clock);
+
+    /* free up data structures */
+    free(data);
 }
