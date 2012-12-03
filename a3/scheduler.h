@@ -1,4 +1,3 @@
-#include "process.h"
 /*
 Yuen Lye Yeap
 Lee Yerkes
@@ -7,9 +6,9 @@ Lee Yerkes
 scheduler.h
  */
 
-void add_process(Process*, void*);
+void add_process(struct Process*, void*);
 
-Process* get_process(void*);
+struct Process* get_process(void*);
 
 int get_timeslice(long, void*, int*);
 

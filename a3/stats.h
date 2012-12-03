@@ -1,4 +1,3 @@
-#include "process.h"
 /*
 Yuen Lye Yeap
 Lee Yerkes
@@ -7,7 +6,7 @@ stats.h
 Header file for statistics functions
 */
 
-typedef struct{
+typedef struct stats{
 	long total_ct;
 	long min_ct;
 	long max_ct;
@@ -15,8 +14,8 @@ typedef struct{
 	long total_time;
 }stats;
 
-extern void stats_init (stats* data);
+void stats_init (stats* data);
 
-extern void updateStats (stats* data, Process* p, long clock);
+void updateStats (stats* data, struct Process *p, long clock);
 
-extern void displayStats (stats* data, long clock);
+void displayStats (stats* data, long clock);

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <unistd.h>
 #include "input.h"
+#include "process.h"
 
 #define CMD_SIZE 10
 #define MAXINT 20
@@ -11,12 +12,12 @@
 #define MILLI 1000
 #define IOSIZE 8192
 
-static Process *p;
+static struct Process *p;
 static int eof;
 static int hasNewProcess;
 
 /* Initialize private member in input */
-extern void input_init()
+void input_init()
 {
     p = NULL;
     eof = 0;
@@ -209,12 +210,12 @@ void get_next_line()
 }
 
 /* get the arrival time of next process. Returns -1 if EOF */
-extern long get_arrival()
+long get_arrival()
 {
     /* if a new process arrives, get next tracefile line */
     if (hasNewProcess)
     {
-        p = (Process*)malloc(sizeof(Process));
+        p = (struct Process*)malloc(sizeof(struct Process));
 
         if (NULL == p)
         {
@@ -246,13 +247,13 @@ extern long get_arrival()
     return p->arrival;
 }
 
-extern Process* get_next_process()
+struct Process* get_next_process()
 {
     hasNewProcess = 1;
     return p;
 }
 
-extern void input_destroy()
+void input_destroy()
 {
     free(p);
 }

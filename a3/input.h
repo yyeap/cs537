@@ -1,11 +1,9 @@
-#include "process.h"
-
-extern void input_init();
+void input_init();
 
 void get_next_line();
 
-extern long get_arrival();
+long get_arrival();
 
-extern Process* get_next_process();
+struct Process* get_next_process();
 
-extern void input_destroy();
+void input_destroy();
