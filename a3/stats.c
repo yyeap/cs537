@@ -48,7 +48,7 @@ void displayStats (stats* data, long clock)
     printf("Average completion time: %.2f\n", (float)data->total_ct / data->jobs);
     printf("Minimum completion time: %li\n", data->min_ct);
     printf("Maximum completion time: %li\n", data->max_ct);
-    printf("Throughput: %.2f\n", (float)(data->jobs / clock) / 1000);
+    printf("Throughput: %.2f\n", (float)(data->jobs / clock) / 1000.0);
     printf("Utilization: %li\tPercent utilization: %.2f\n", data->total_time, (float)data->total_time / clock);
 
     /* free up data structures */
